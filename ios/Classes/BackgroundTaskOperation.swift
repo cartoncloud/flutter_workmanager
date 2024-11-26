@@ -26,6 +26,8 @@ class BackgroundTaskOperation: Operation {
 
     
     override func main() {
+        os_log("Operation with identifier %{public}@ is starting", log: OSLog.default, type: .info, identifier)
+
         let semaphore = DispatchSemaphore(value: 0)
         let worker = BackgroundWorker(mode: self.backgroundMode,
                                       inputData: self.inputData,
@@ -37,5 +39,6 @@ class BackgroundTaskOperation: Operation {
         }
 
         semaphore.wait()
+        os_log("Operation with identifier %{public}@ is starting", log: OSLog.default, type: .info, identifier)
     }
 }

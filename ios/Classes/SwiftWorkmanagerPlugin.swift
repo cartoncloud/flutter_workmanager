@@ -13,6 +13,7 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
     static let identifier = "be.tramckrijte.workmanager"
 
     private static var flutterPluginRegistrantCallback: FlutterPluginRegistrantCallback?
+    private static let operationQueue = OperationQueue()
 
     private struct ForegroundMethodChannel {
         static let channelName = "\(SwiftWorkmanagerPlugin.identifier)/foreground_channel_work_manager"
@@ -85,8 +86,6 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
 
     @available(iOS 13.0, *)
     private static func handleBGProcessingTask(identifier: String, task: BGProcessingTask) {
-        let operationQueue = OperationQueue()
-
         // Create an operation that performs the main part of the background task
         let operation = BackgroundTaskOperation(
             task.identifier,
@@ -106,6 +105,8 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
         operation.completionBlock = {
             task.setTaskCompleted(success: !operation.isCancelled)
         }
+
+        os_log("Adding operation with identifier %{public}@ to the queue", log: OSLog.default, type: .info, identifier)
 
         // Start the operation
         operationQueue.addOperation(operation)
