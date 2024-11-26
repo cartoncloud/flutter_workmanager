@@ -13,7 +13,11 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
     static let identifier = "be.tramckrijte.workmanager"
 
     private static var flutterPluginRegistrantCallback: FlutterPluginRegistrantCallback?
-    private static let operationQueue = OperationQueue()
+    private static let operationQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1 // Set the desired number of concurrent operations
+        return queue
+    }()
 
     private struct ForegroundMethodChannel {
         static let channelName = "\(SwiftWorkmanagerPlugin.identifier)/foreground_channel_work_manager"
