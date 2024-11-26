@@ -86,6 +86,7 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
 
     @available(iOS 13.0, *)
     private static func handleBGProcessingTask(identifier: String, task: BGProcessingTask) {
+        let operationQueue = OperationQueue()
         // Create an operation that performs the main part of the background task
         let operation = BackgroundTaskOperation(
             task.identifier,
@@ -105,8 +106,6 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
         operation.completionBlock = {
             task.setTaskCompleted(success: !operation.isCancelled)
         }
-
-        logInfo("Adding operation with identifier \(identifier) to the queue")
 
         // Start the operation
         operationQueue.addOperation(operation)
@@ -150,7 +149,6 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
     /// Immediately starts a one off task
     @available(iOS 13.0, *)
     public static func startOneOffTask(identifier: String, taskIdentifier: UIBackgroundTaskIdentifier, inputData:String, delaySeconds: Int64) {
-        let operationQueue = OperationQueue()
         // Create an operation that performs the main part of the background task
         let operation = BackgroundTaskOperation(
             identifier,
@@ -163,6 +161,8 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
         operation.completionBlock = {
             UIApplication.shared.endBackgroundTask(taskIdentifier)
         }
+
+        logInfo("CC-WorkManager Adding operation with identifier \(identifier) to the queue")
 
         // Start the operation
         operationQueue.addOperation(operation)
