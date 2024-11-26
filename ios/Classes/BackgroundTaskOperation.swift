@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import os
 
 class BackgroundTaskOperation: Operation {
 
@@ -26,7 +27,7 @@ class BackgroundTaskOperation: Operation {
 
     
     override func main() {
-        os_log("Operation with identifier %{public}@ is starting", log: OSLog.default, type: .info, identifier)
+        logInfo("Operation with identifier \(identifier) is starting")
 
         let semaphore = DispatchSemaphore(value: 0)
         let worker = BackgroundWorker(mode: self.backgroundMode,
@@ -39,6 +40,6 @@ class BackgroundTaskOperation: Operation {
         }
 
         semaphore.wait()
-        os_log("Operation with identifier %{public}@ is starting", log: OSLog.default, type: .info, identifier)
+        logInfo("Operation with identifier \(identifier) is finishing")
     }
 }

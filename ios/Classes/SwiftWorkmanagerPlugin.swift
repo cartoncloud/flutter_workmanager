@@ -106,7 +106,7 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
             task.setTaskCompleted(success: !operation.isCancelled)
         }
 
-        os_log("Adding operation with identifier %{public}@ to the queue", log: OSLog.default, type: .info, identifier)
+        logInfo("Adding operation with identifier \(identifier) to the queue")
 
         // Start the operation
         operationQueue.addOperation(operation)
