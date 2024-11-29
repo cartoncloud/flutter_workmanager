@@ -35,6 +35,9 @@ class BackgroundTaskOperation: Operation {
                                       flutterPluginRegistrantCallback: self.flutterPluginRegistrantCallback)
         DispatchQueue.main.async {
             worker.performBackgroundRequest { _ in
+                if result == .failed {
+                    logError("CartonCloudLogger-WorkManager Operation with identifier \(self.identifier) failed")
+                }
                 semaphore.signal()
             }
         }
