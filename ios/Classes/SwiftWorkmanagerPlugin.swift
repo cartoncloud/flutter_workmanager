@@ -166,7 +166,7 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
             UIApplication.shared.endBackgroundTask(taskIdentifier)
         }
 
-        logInfo("CC-WorkManager Adding operation with identifier \(identifier) to the queue")
+        logInfo("CartonCloudLogger-WorkManager Adding operation with identifier \(identifier) to the queue")
 
         // Start the operation
         operationQueue.addOperation(operation)
