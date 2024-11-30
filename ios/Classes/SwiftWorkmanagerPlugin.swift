@@ -251,7 +251,7 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
 
     @objc
     @available(iOS 13.0, *)
-    private static func scheduleRetryPendingTasks() {
+    public static func scheduleRetryPendingTasks() {
         let arguments: [AnyHashable: Any] = [
             "uniqueName": "retryPendingTask"
         ]
