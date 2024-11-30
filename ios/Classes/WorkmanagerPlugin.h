@@ -28,4 +28,10 @@
 + (void)registerBGProcessingTaskWithIdentifier:(NSString *) taskIdentifier;
 
 
+/**
+ *
+ */
++ (void)registerRetryPendingTasks;
+
+
 @end

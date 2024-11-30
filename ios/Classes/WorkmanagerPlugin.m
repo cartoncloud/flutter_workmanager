@@ -35,4 +35,10 @@
     }
 }
 
++ (void)registerRetryPendingTasks {
+    if (@available(iOS 13, *)) {
+        [SwiftWorkmanagerPlugin scheduleRetryPendingTasks];
+    }
+}
+
 @end

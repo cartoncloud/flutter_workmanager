@@ -152,13 +152,15 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
 
     /// Immediately starts a one off task
     @available(iOS 13.0, *)
+    // TODO add network contraint
     public static func startOneOffTask(identifier: String, taskIdentifier: UIBackgroundTaskIdentifier, inputData:String, delaySeconds: Int64) {
         // Create an operation that performs the main part of the background task
         let operation = BackgroundTaskOperation(
             identifier,
             inputData: inputData,
             flutterPluginRegistrantCallback: SwiftWorkmanagerPlugin.flutterPluginRegistrantCallback,
-            backgroundMode: .backgroundOneOffTask(identifier: identifier)
+            backgroundMode: .backgroundOneOffTask(identifier: identifier),
+            requiresNetwork: true
         )
 
         // Inform the system that the task is complete when the operation completes
@@ -245,6 +247,19 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
             logInfo("Could not schedule BGProcessingTask identifier:\(uniqueTaskIdentifier) error:\(error.localizedDescription)")
             logInfo("Possible issues can be: running on a simulator instead of a real device, or the task name is not registered")
         }
+    }
+
+    @objc
+    @available(iOS 13.0, *)
+    private static func scheduleRetryPendingTasks() {
+        let arguments: [AnyHashable: Any] = [
+            "uniqueName": "retryPendingTask"
+        ]
+
+        let result: FlutterResult = { _ in }
+
+        let instance = SwiftWorkmanagerPlugin()
+        instance.registerOneOffTask(arguments: arguments, result: result)
     }
 
     static func callback(_: UIBackgroundFetchResult) {
@@ -337,6 +352,7 @@ extension SwiftWorkmanagerPlugin: FlutterPlugin {
             let inputData =
                     arguments[method.Arguments.inputData.rawValue] as? String
 
+            // TODO add network constraint, refer to registerProcessingTask
 
             taskIdentifier = UIApplication.shared.beginBackgroundTask(withName: uniqueTaskIdentifier, expirationHandler: {
                 // Mark the task as ended if time is expired, otherwise iOS might terminate and will throttle future executions
