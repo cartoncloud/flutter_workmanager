@@ -64,10 +64,12 @@ class BackgroundWorker {
         guard let callbackHandle = UserDefaultsHelper.getStoredCallbackHandle(),
             let flutterCallbackInformation = FlutterCallbackCache.lookupCallbackInformation(callbackHandle)
             else {
-                logError("[\(String(describing: self))] \(WMPError.workmanagerNotInitialized.message)")
+                logError("CartonCloudLogger - WorkManager [\(String(describing: self))] \(WMPError.workmanagerNotInitialized.message)")
                 completionHandler(.failed)
                 return false
         }
+
+        logInfo("CartonCloudLogger - WorkManager found callbackHandle")
 
         let taskSessionStart = Date()
         let taskSessionIdentifier = UUID()
