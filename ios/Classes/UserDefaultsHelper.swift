@@ -15,7 +15,7 @@ struct UserDefaultsHelper {
 
     enum Key {
         case callbackHandle
-        case hasPendingTasks
+        case pendingTasks
         case isDebug
 
         var stringValue: String {
@@ -35,14 +35,24 @@ struct UserDefaultsHelper {
 
     // MARK: hasPendingTasks
 
-    static func storeHasPendingTasks(_ hasPendingTasks: Bool) {
-        if(hasPendingTasks != getStoredHasPendingTasks()){
-            store(hasPendingTasks, key: .hasPendingTasks)
-        }
+    static func storePendingTasks(_ pendingTasks: Int16) {
+        store(pendingTasks, key: .pendingTasks)
     }
 
-    static func getStoredHasPendingTasks() -> Bool {
-        return getValue(for: .hasPendingTasks) ?? false
+    static func getStoredPendingTasks() -> Int16 {
+        return getValue(for: .pendingTasks) ?? 0
+    }
+
+    static func increasePendingTasksCount() {
+        let currentCount = getPendingTasksCount()
+        store(currentCount + 1, key: .pendingTasksCount)
+    }
+
+    static func decreasePendingTasksCount() {
+        let currentCount = getPendingTasksCount()
+        if currentCount > 0 {
+            store(currentCount - 1, key: .pendingTasksCount)
+        }
     }
 
     // MARK: isDebug

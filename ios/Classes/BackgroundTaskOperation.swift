@@ -37,7 +37,8 @@ class BackgroundTaskOperation: Operation {
             worker.performBackgroundRequest { result in
                 if result == .failed {
                     logError("CartonCloudLogger - WorkManager Operation with identifier \(self.identifier) failed")
-                    UserDefaultsHelper.storeHasPendingTasks(true)
+                } else {
+                    UserDefaultsHelper.decreasePendingTasksCount()
                 }
                 semaphore.signal()
             }

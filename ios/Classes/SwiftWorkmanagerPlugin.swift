@@ -170,6 +170,7 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
 
         // Start the operation
         operationQueue.addOperation(operation)
+        UserDefaultsHelper.increasePendingTasksCount()
     }
 
     /// Registers [BGAppRefresh] task name for the given identifier.
@@ -250,11 +251,13 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
     @objc
     @available(iOS 13.0, *)
     public static func scheduleRetryPendingTasks() {
-        if(!UserDefaultsHelper.getStoredHasPendingTasks()){
+        if(UserDefaultsHelper.getStoredPendingTasks() <= 0){
             logInfo("CartonCloudLogger - WorkManager no pending task available")
             return
         }
 
+        // Reset pending tasks count
+        UserDefaultsHelper.storePendingTasks(0)
         logInfo("CartonCloudLogger - WorkManager setting up retry task")
 
         let arguments: [AnyHashable: Any] = [
