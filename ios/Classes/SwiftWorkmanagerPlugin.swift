@@ -262,11 +262,16 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
         logInfo("CartonCloudLogger - WorkManager setting up retry task")
 
         let arguments: [AnyHashable: Any] = [
+            "initialDelaySeconds": 0 as Int64,
             "uniqueName": "retryPendingTask"
         ]
 
         let result: FlutterResult = { value in
-            logInfo("CartonCloudLogger - WorkManager retry pending upload result: \(value)")
+            if let error = value as? FlutterError {
+                logInfo("CartonCloudLogger - WorkManager retry pending upload result: FlutterError message: \(error.message ?? "No message")")
+            } else {
+                logInfo("CartonCloudLogger - WorkManager retry pending upload result: \(value)")
+            }
         }
 
         let instance = SwiftWorkmanagerPlugin()
