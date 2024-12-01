@@ -44,14 +44,14 @@ struct UserDefaultsHelper {
     }
 
     static func increasePendingTasksCount() {
-        let currentCount = getPendingTasksCount()
-        store(currentCount + 1, key: .pendingTasksCount)
+        let currentCount = getStoredPendingTasks()
+        store(currentCount + 1, key: .pendingTasks)
     }
 
     static func decreasePendingTasksCount() {
-        let currentCount = getPendingTasksCount()
+        let currentCount = getStoredPendingTasks()
         if currentCount > 0 {
-            store(currentCount - 1, key: .pendingTasksCount)
+            store(currentCount - 1, key: .pendingTasks)
         }
     }
 
