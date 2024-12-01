@@ -242,10 +242,10 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
         request.requiresExternalPower = requiresExternalPower
         do {
             try BGTaskScheduler.shared.submit(request)
-            logInfo("BGProcessingTask submitted \(uniqueTaskIdentifier) earliestBeginInSeconds:\(begin)")
+            logInfo("CartonCloudLogger - WorkManager BGProcessingTask submitted \(uniqueTaskIdentifier) earliestBeginInSeconds:\(begin)")
         } catch {
-            logInfo("Could not schedule BGProcessingTask identifier:\(uniqueTaskIdentifier) error:\(error.localizedDescription)")
-            logInfo("Possible issues can be: running on a simulator instead of a real device, or the task name is not registered")
+            logInfo("CartonCloudLogger - WorkManager Could not schedule BGProcessingTask identifier:\(uniqueTaskIdentifier) error:\(error.localizedDescription)")
+            logInfo("CartonCloudLogger - WorkManager Possible issues can be: running on a simulator instead of a real device, or the task name is not registered")
         }
     }
 

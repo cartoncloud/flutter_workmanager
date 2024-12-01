@@ -62,6 +62,10 @@ class BackgroundWorker {
     @discardableResult
     func performBackgroundRequest(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool {
         logInfo("CartonCloudLogger - WorkManager performBackgroundRequest for worker")
+        let handle = UserDefaultsHelper.getStoredCallbackHandle() ?? 0 as Int64
+        logInfo("CartonCloudLogger - WorkManager stored callbackHandle: \(String(describing: handle))")
+        logInfo("CartonCloudLogger - WorkManager FlutterCallbackCache callback: \(String(describing: FlutterCallbackCache.lookupCallbackInformation(handle)))")
+        
         guard let callbackHandle = UserDefaultsHelper.getStoredCallbackHandle(),
             let flutterCallbackInformation = FlutterCallbackCache.lookupCallbackInformation(callbackHandle)
             else {
