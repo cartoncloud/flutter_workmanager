@@ -289,7 +289,7 @@ class Workmanager {
     /// Only partially supported on iOS.
     /// See [Constraints] for details.
     final Constraints? constraints,
-    final allowOverride,
+    final bool allowOverride = true,
   }) async =>
       await _foregroundChannel.invokeMethod(
         "registerProcessingTask",
