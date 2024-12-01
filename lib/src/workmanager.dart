@@ -289,6 +289,7 @@ class Workmanager {
     /// Only partially supported on iOS.
     /// See [Constraints] for details.
     final Constraints? constraints,
+    final allowOverride,
   }) async =>
       await _foregroundChannel.invokeMethod(
         "registerProcessingTask",
@@ -298,6 +299,7 @@ class Workmanager {
           taskName: taskName,
           initialDelay: initialDelay,
           constraints: constraints,
+          allowOverride: allowOverride,
         ),
       );
 
@@ -379,6 +381,7 @@ class JsonMapperHelper {
     final Duration? backoffPolicyDelay,
     final OutOfQuotaPolicy? outOfQuotaPolicy,
     final Map<String, dynamic>? inputData,
+    final bool? allowOverride,
   }) {
     if (inputData != null) {
       for (final entry in inputData.entries) {
@@ -417,6 +420,7 @@ class JsonMapperHelper {
       "backoffDelayInMilliseconds": backoffPolicyDelay?.inMilliseconds,
       "outOfQuotaPolicy": _enumToString(outOfQuotaPolicy),
       "inputData": inputData == null ? null : jsonEncode(inputData),
+      "allowOverride": allowOverride,
     };
   }
 

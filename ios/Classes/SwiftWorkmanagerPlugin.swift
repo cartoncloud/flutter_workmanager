@@ -53,6 +53,7 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
                     case initialDelaySeconds
                     case networkType
                     case requiresCharging
+                    case allowOverride
                 }
             }
 
@@ -430,11 +431,30 @@ extension SwiftWorkmanagerPlugin: FlutterPlugin {
                 requiresNetwork = true
             }
 
-            SwiftWorkmanagerPlugin.scheduleBackgroundProcessingTask(
-                withIdentifier: uniqueTaskIdentifier,
-                earliestBeginInSeconds: delaySeconds,
-                requiresNetworkConnectivity: requiresNetwork,
-                requiresExternalPower: requiresCharging)
+            let allowOverride = arguments[method.Arguments.allowOverride.rawValue] as? Bool ?? true
+
+            if !allowOverride {
+                BGTaskScheduler.shared.getPendingTaskRequests { taskRequests in
+                    if taskRequests.contains(where: { $0.identifier == uniqueTaskIdentifier }) {
+                        result(FlutterError(code: "100",
+                                            message: "Task with identifier \(uniqueTaskIdentifier) already exists",
+                                            details: nil))
+                        return
+                    } else {
+                        SwiftWorkmanagerPlugin.scheduleBackgroundProcessingTask(
+                            withIdentifier: uniqueTaskIdentifier,
+                            earliestBeginInSeconds: delaySeconds,
+                            requiresNetworkConnectivity: requiresNetwork,
+                            requiresExternalPower: requiresCharging)
+                    }
+                }
+            } else {
+                SwiftWorkmanagerPlugin.scheduleBackgroundProcessingTask(
+                    withIdentifier: uniqueTaskIdentifier,
+                    earliestBeginInSeconds: delaySeconds,
+                    requiresNetworkConnectivity: requiresNetwork,
+                    requiresExternalPower: requiresCharging)
+            }
 
             result(true)
             return
