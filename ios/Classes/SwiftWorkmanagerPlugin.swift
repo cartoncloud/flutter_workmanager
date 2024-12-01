@@ -166,7 +166,7 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
             UIApplication.shared.endBackgroundTask(taskIdentifier)
         }
 
-        logInfo("CartonCloudLogger-WorkManager Adding operation with identifier \(identifier) to the queue")
+        logInfo("CartonCloudLogger - WorkManager Adding operation with identifier \(identifier) to the queue")
 
         // Start the operation
         operationQueue.addOperation(operation)
@@ -250,11 +250,20 @@ public class SwiftWorkmanagerPlugin: FlutterPluginAppLifeCycleDelegate {
     @objc
     @available(iOS 13.0, *)
     public static func scheduleRetryPendingTasks() {
+        if(!UserDefaultsHelper.getStoredHasPendingTasks()){
+            logInfo("CartonCloudLogger - WorkManager no pending task available")
+            return
+        }
+
+        logInfo("CartonCloudLogger - WorkManager setting up retry task")
+
         let arguments: [AnyHashable: Any] = [
             "uniqueName": "retryPendingTask"
         ]
 
-        let result: FlutterResult = { _ in }
+        let result: FlutterResult = { value in
+            logInfo("CartonCloudLogger - WorkManager retry pending upload result: \(value)")
+        }
 
         let instance = SwiftWorkmanagerPlugin()
         instance.registerOneOffTask(arguments: arguments, result: result)

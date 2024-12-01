@@ -27,7 +27,7 @@ class BackgroundTaskOperation: Operation {
 
     
     override func main() {
-        logInfo("CartonCloudLogger-WorkManager Operation with identifier \(identifier) is starting")
+        logInfo("CartonCloudLogger - WorkManager Operation with identifier \(identifier) is starting")
 
         let semaphore = DispatchSemaphore(value: 0)
         let worker = BackgroundWorker(mode: self.backgroundMode,
@@ -36,13 +36,14 @@ class BackgroundTaskOperation: Operation {
         DispatchQueue.main.async {
             worker.performBackgroundRequest { result in
                 if result == .failed {
-                    logError("CartonCloudLogger-WorkManager Operation with identifier \(self.identifier) failed")
+                    logError("CartonCloudLogger - WorkManager Operation with identifier \(self.identifier) failed")
+                    UserDefaultsHelper.storeHasPendingTasks(true)
                 }
                 semaphore.signal()
             }
         }
 
         semaphore.wait()
-        logInfo("CartonCloudLogger-WorkManager Operation with identifier \(identifier) is finishing")
+        logInfo("CartonCloudLogger - WorkManager Operation with identifier \(identifier) is finishing")
     }
 }
