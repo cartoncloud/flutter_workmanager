@@ -65,10 +65,10 @@ func logFault(_ message: String) {
 
 func log(_ message: String, as type: LogType = .default) {
 
-    if #available(iOS 10.0, *) {
-        os_log("%@", type: type.osLogType, message)
-    } else {
+//    if #available(iOS 10.0, *) {
+//        os_log("%@", type: type.osLogType, message)
+//    } else {
         NSLog("%@", "\(type.rawValue) log: \(message)")
-    }
+//    }
 
 }
