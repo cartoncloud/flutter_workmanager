@@ -27,31 +27,25 @@ class BackgroundTaskOperation: Operation {
 
     
     override func main() {
-        do {
-            logInfo("CartonCloudLogger - WorkManager Operation with identifier \(identifier) is starting")
+        let semaphore = DispatchSemaphore(value: 0)
+        let worker = BackgroundWorker(mode: self.backgroundMode,
+                                      inputData: self.inputData,
+                                      flutterPluginRegistrantCallback: self.flutterPluginRegistrantCallback)
 
-            let semaphore = DispatchSemaphore(value: 0)
-            let worker = BackgroundWorker(mode: self.backgroundMode,
-                                          inputData: self.inputData,
-                                          flutterPluginRegistrantCallback: self.flutterPluginRegistrantCallback)
+        logInfo("CartonCloudLogger - WorkManager Operation with identifier \(identifier) is starting")
 
-            logInfo("CartonCloudLogger - WorkManager created worker \(worker)")
-
-            DispatchQueue.main.async {
-                worker.performBackgroundRequest { result in
-                    if result == .failed {
-                        logError("CartonCloudLogger - WorkManager Operation with identifier \(self.identifier) failed")
-                    } else {
-                        UserDefaultsHelper.decreasePendingTasksCount()
-                    }
-                    semaphore.signal()
+        DispatchQueue.main.async {
+            worker.performBackgroundRequest { result in
+                if result == .failed {
+                    logError("CartonCloudLogger - WorkManager Operation with identifier \(self.identifier) failed")
+                } else {
+                    UserDefaultsHelper.decreasePendingTasksCount()
                 }
+                semaphore.signal()
             }
-
-            semaphore.wait()
-            logInfo("CartonCloudLogger - WorkManager Operation with identifier \(identifier) is finishing")
-        } catch {
-            logError("CartonCloudLogger - WorkManager Operation with identifier \(identifier) encountered an error: \(error.localizedDescription)")
         }
+
+        semaphore.wait()
+        logInfo("CartonCloudLogger - WorkManager Operation with identifier \(identifier) is finishing")
     }
 }
